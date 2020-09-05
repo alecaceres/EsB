@@ -17,10 +17,10 @@ app = Flask(__name__)
 
 
 ##### VARIABLES WHICH YOU CAN MODIFY #####
-loginPassword = "put_password_here"                                  # Password for web-interface
+loginPassword = "P32020"                                  # Password for web-interface
 arduinoPort = "ARDUINO"                                              # Default port which will be selected
-streamScript = "/home/ale/mjpg-streamer.sh"                           # Location of script used to start/stop video stream
-soundFolder = "/home/ale/walle-replica/web_interface/static/sounds/"  # Location of the folder containing all audio files
+streamScript = "./mjpg-streamer.sh"                           # Location of script used to start/stop video stream
+soundFolder = "./walle-replica/web_interface/static/sounds/"  # Location of the folder containing all audio files
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)      # Secret key used for login session cookies
 ##########################################
 
