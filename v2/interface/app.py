@@ -14,7 +14,7 @@ app = Flask(__name__)
 loginPassword = "P32020"                                  # Contraseña para la interfaz web
 arduinoPort = "ARDUINO"                                              # Puerto seleccionado por defecto
 streamScript = "./mjpg-streamer.sh"                           # Ubicación del script para comenzar/detener la transmisión
-soundFolder = "./walle-replica/interface/static/sounds/"  # Ubicación de los reportes
+soundFolder = "./v2/interface/static/sounds/"  # Ubicación de los reportes
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)      # Clave secreta usada para las cookies de la sesión
 ##########################################
 
