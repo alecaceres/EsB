@@ -1,9 +1,3 @@
-/* 
- * Robot Webinterface - CSS
- * Simon B., https://wired.chillibasket.com
- * V1.4, 16th February 2020
- */
-
 .wrapper {
 	padding-left: 0px;
 	padding-right: 0px;
@@ -74,7 +68,7 @@
 	-ms-overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
 }
-	
+
 .no-padding {
 	padding-left: 0px !important;
 	padding-right: 0px !important;

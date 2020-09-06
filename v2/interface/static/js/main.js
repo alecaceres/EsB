@@ -1,4 +1,4 @@
-/* 
+/*
  * Robot Webinterface - Main Script
  * Simon B., https://wired.chillibasket.com
  * V1.4, 16th February 2020
@@ -27,14 +27,14 @@ var arduinoTimer;
  * Update Web-Interface Settings
  */
 function sendSettings(type, value) {
-	
+
 	// If shutdown is requested, show a confirmation prompt
 	if (type=="shutdown") {
 		if (!confirm("Are you sure you want to shutdown?")) {
 			return 0;
 		}
 	}
-	
+
 	//alert(type + ", " + value);
 	// Send data to python app, so that it can be passed on
 	$.ajax({
@@ -47,11 +47,11 @@ function sendSettings(type, value) {
 			if(data.status == "Error"){
 				showAlert(1, 'Error!', data.msg, 1);
 				return 0;
-			
+
 			// Else if response is all good
 			} else {
 				showAlert(0, 'Success!', 'Settings have been updated.', 1);
-				
+
 				// If setting related to the camera stream, show/hide the video stream
 				if(typeof data.streamer !== "undefined"){
 						if(data.streamer == "Active"){
@@ -74,7 +74,7 @@ function sendSettings(type, value) {
 			if (type == "shutdown") {
 				showAlert(0, 'Raspberry Pi is now shutting down!', 'The WALL-E web-interface is no longer active.', 1);
 			} else {
-				showAlert(1, 'Unknown Error!', 'Unable to update settings.', 1);
+				showAlert(1, 'Error Desconocido!', 'Unable to update settings.', 1);
 			}
 			return 0;
 		}
@@ -86,7 +86,7 @@ function sendSettings(type, value) {
  * Update Arduino Connection
  */
 function arduinoConnect(item) {
-	
+
 	// Only run this if the button is not disabled
 	if (!item.classList.contains('disabled')) {
 		$.ajax({
@@ -107,13 +107,13 @@ function arduinoConnect(item) {
 					$('#ardu-area').removeClass('bg-success');
 					clearInterval(arduinoTimer);
 					return 0;
-				
+
 				// Else if response is all good
 				} else {
-					
+
 					console.log("Arduino connection update: " + data.arduino);
-					
-					// If the setting related to Arduino connection, update the button						
+
+					// If the setting related to Arduino connection, update the button
 					if(data.arduino == "Connected"){
 						$('#conn-arduino').html('Disconnect');
 						$('#conn-arduino').removeClass('btn-outline-info');
@@ -141,7 +141,7 @@ function arduinoConnect(item) {
 			error: function(error) {
 				// If no response was recevied from the python backend, show an "unknown" error
 				updateSerialList(false);
-				showAlert(1, 'Unknown Error!', 'Unable to update connection settings.', 1);
+				showAlert(1, 'Error Desconocido!', 'Unable to update connection settings.', 1);
 				return 0;
 			}
 		});
@@ -153,7 +153,7 @@ function arduinoConnect(item) {
  * Update list of serial ports
  */
 function updateSerialList(alertActive) {
-	
+
 	$.ajax({
 		url: "/arduinoConnect",
 		type: "POST",
@@ -164,15 +164,15 @@ function updateSerialList(alertActive) {
 			if(data.status == "Error"){
 				if (alertActive) showAlert(1, 'Error!', data.msg, 1);
 				return 0;
-			
+
 			// Else if response is all good
 			} else {
 				if (alertActive) showAlert(0, 'Success!', 'Updated serial port list.', 1);
-				
+
 				var portList = data.ports;
 				var listLength = portList.length;
 				$('#port-select').empty();
-				
+
 				if (listLength > 0) {
 					for (var i = 0; i < listLength; i++) {
 						if (data.portSelect == i) {
@@ -181,7 +181,7 @@ function updateSerialList(alertActive) {
 							$('#port-select').append('<option value="' + i + '">' + portList[i] + '</option>');
 						}
 					}
-					
+
 					if ($('#conn-arduino').hasClass('disabled')) {
 						$('#conn-arduino').removeClass('disabled');
 						$('#conn-arduino').removeClass('btn-outline-secondary');
@@ -195,13 +195,13 @@ function updateSerialList(alertActive) {
 					}
 					$('#port-select').append('<option disabled selected>No devices found!</option>');
 				}
-				
+
 				return 1;
 			}
 		},
 		error: function(error) {
 			// If no response was recevied from the python backend, show an "unknown" error
-			if (alertActive) showAlert(1, 'Unknown Error!', 'Unable to update connection settings.', 1);
+			if (alertActive) showAlert(1, 'Error Desconocido!', 'Unable to update connection settings.', 1);
 			return 0;
 		}
 	});
@@ -229,7 +229,7 @@ function anime(clip, time) {
 				$('#anime-progress').css("width", "0%").animate({width: 100+"%"}, 500);
 				showAlert(1, 'Error!', data.msg, 1);
 				return false;
-				
+
 			// Otherwise set the progress bar to show the animation progress
 			} else {
 				$('#anime-progress').removeClass('bg-danger');
@@ -241,7 +241,7 @@ function anime(clip, time) {
 			// If no response was recevied from the python backend, show an "unknown" error
 			$('#anime-progress').addClass('bg-danger');
 			$('#anime-progress').css("width", "0%").animate({width: 100+"%"}, 500);
-			showAlert(1, 'Unknown Error!', 'Unable to run the animation.', 1);
+			showAlert(1, 'Error Desconocido!', 'Unable to run the animation.', 1);
 			return false;
 		}
 	});
@@ -269,7 +269,7 @@ function playAudio(clip, time) {
 				$('#audio-progress').css("width", "0%").animate({width: 100+"%"}, 500);
 				showAlert(1, 'Error!', data.msg, 1);
 				return false;
-				
+
 			// Otherwise set the progress bar to show the audio clip progress
 			} else {
 				$('#audio-progress').removeClass('bg-danger');
@@ -281,7 +281,7 @@ function playAudio(clip, time) {
 			// If no response was recevied from the python backend, show an "unknown" error
 			$('#audio-progress').addClass('bg-danger');
 			$('#audio-progress').css("width", "0%").animate({width: 100+"%"}, 500);
-			showAlert(1, 'Unknown Error!', 'Unable to play audio file.', 1);
+			showAlert(1, 'Error Desconocido!', 'No se puede mostrar el reporte.', 1);
 			return false;
 		}
 	});
@@ -303,7 +303,7 @@ function servoControl(item, servo, value) {
 				item.value = item.oldvalue;
 				showAlert(1, 'Error!', data.msg, 0);
 				return false;
-				
+
 			// Otherwise ensure that current value is correctly updated
 			} else {
 				item.value = value;
@@ -313,7 +313,7 @@ function servoControl(item, servo, value) {
 		},
 		error: function(error) {
 			// If no response was recevied from the python backend, show an "unknown" error
-			showAlert(1, 'Unknown Error!', 'Unable to update servo position.', 1);
+			showAlert(1, 'Error Desconocido!', 'No se puede actualizar la luminosidad.', 1);
 			return false;
 		}
 	});
@@ -324,7 +324,7 @@ function servoControl(item, servo, value) {
  * Send a preset servo control command
  */
 function servoPresets(item, preset, servo) {
-	
+
 	// Only run this if the button is not disabled
 	if (!item.classList.contains('disabled')) {
 		$.ajax({
@@ -337,7 +337,7 @@ function servoPresets(item, preset, servo) {
 				if(data.status == "Error"){
 					showAlert(1, 'Error!', data.msg, 1);
 					return false;
-				
+
 				// Otherwise, update the manual servo control sliders to reflect the current position
 				} else {
 					if (preset == "head-up") {
@@ -397,7 +397,7 @@ function servoPresets(item, preset, servo) {
 			},
 			error: function(error) {
 				// If no response was recevied from the python backend, show an "unknown" error
-				showAlert(1, 'Unknown Error!', 'Unable to update servo position.', 1);
+				showAlert(1, 'Error Desconocido!', 'Unable to update servo position.', 1);
 				return false;
 			}
 		});
@@ -451,7 +451,7 @@ function servoInputs(enabled) {
 
 
 /*
- * This function checks if the Arduino has sent any messages to the 
+ * This function checks if the Arduino has sent any messages to the
  * Raspberry Pi; for example, the current battery level
  */
 function checkArduinoStatus() {
@@ -511,7 +511,7 @@ function showAlert(error, bold, content, fade) {
 	$('#alert-space').html('<div class="alert alert-dismissible ' + alertType + ' set-alert">\
 								<button type="button" class="close" data-dismiss="alert">&times;</button>\
 								<strong>' + bold + '</strong> ' + content + ' \
-							</div>');			
+							</div>');
 	if (fade == 1) $('#alert-space').fadeIn(150);
 	if (content == "Arduino not connected" && $('#conn-arduino').hasClass('btn-outline-danger')) {
 		updateSerialList(false);
@@ -546,7 +546,7 @@ function controllerOn() {
 		joypad.on('button_press', e => {
 			console.log(e.detail);
 			return pressButton(e);
-		});	
+		});
 		moveXY[0] = 0;
 		moveXY[2] = 0;
 		gamePadActive = 1;
@@ -576,45 +576,45 @@ function updateInfo(e) {
 	$('#cont-area').removeClass('bg-danger');
 	$('#cont-area').addClass('bg-success');
 	//$('#joystick').addClass('d-none');
-	gamepadTimer = setInterval(sendMovementValues, 100); 
+	gamepadTimer = setInterval(sendMovementValues, 100);
 }
 
 // When a controller button is pressed
 function pressButton(e) {
 	const { buttonName } = e.detail;
-	
+
 	// A or Cross button - Sad eye expression
 	if (buttonName === 'button_0') {
 		servoPresets(document.getElementById('eyes-sad'),'eyes-sad','i');
-	
+
 	// B or Circle button - Right head tilt
 	} else if (buttonName === 'button_1') {
 		servoPresets(document.getElementById('eyes-right'),'eyes-right','l');
-	
+
 	// X or Square button - Left head tilt
 	} else if (buttonName === 'button_2') {
 		servoPresets(document.getElementById('eyes-left'),'eyes-left','j');
-	
+
 	// Y or Triangle button - Neutral eye expression
 	} else if (buttonName === 'button_3') {
 		servoPresets(document.getElementById('eyes-neutral'),'eyes-neutral','k');
-	
+
 	// Left Trigger button - Lower left arm
 	} else if (buttonName === 'button_6') {
 		moveArms[0] = -1;
-	
+
 	// Left Bumper button - Raise left arm
 	} else if (buttonName === 'button_4') {
 		moveArms[0] = 1;
-		
+
 	// Right Trigger button - Lower right arm
 	} else if (buttonName === 'button_7') {
 		moveArms[2] = -1;
-		
+
 	// Right Bumper button - Raise right arm
 	} else if (buttonName === 'button_5') {
 		moveArms[2] = 1;
-	
+
 	// Press down on left stick - Move arms back to neutral position
 	} else if (buttonName === 'button_10') {
 		moveArms[0] = 0;
@@ -622,14 +622,14 @@ function pressButton(e) {
 		moveArms[2] = 0;
 		moveArms[3] = 50;
 		servoPresets(document.getElementById('arms-neutral'),'arms-neutral','n');
-	
+
 	// Press down on right stick - Move head back to neutral position
 	} else if (buttonName === 'button_11') {
 		moveHead[0] = 50;
 		servoControl(document.getElementById('head-rotation'),'G',50);
 		moveHead[1] = 125;
 		servoPresets(document.getElementById('head-neutral'),'head-neutral','g');
-		
+
 	// Back or Share button - Turn on/off automatic servo mode
 	} else if (buttonName === 'button_8') {
 		if ($('#auto-anime').parent().hasClass('active')) {
@@ -643,23 +643,23 @@ function pressButton(e) {
 			sendSettings('animeMode',1);
 			servoInputs(0);
 		}
-	
+
 	// Left d-pad button - Play random sound
 	} else if (buttonName === 'button_14') {
 		var fileNames = [];
 		var fileLengths = [];
-		$("#audio-accordion div div a").each(function() { 
+		$("#audio-accordion div div a").each(function() {
 			fileNames.push($(this).attr('file-name'));
 			fileLengths.push($(this).attr('file-length'));
 		});
 		var randomNumber = Math.floor((Math.random() * fileNames.length));
 		playAudio(fileNames[randomNumber],fileLengths[randomNumber]);
-		
+
 	// Right d-pad button - Play random servo animation
 	} else if (buttonName === 'button_15') {
 		var fileNames = [];
 		var fileLengths = [];
-		$("#anime-accordion div div a").each(function() { 
+		$("#anime-accordion div div a").each(function() {
 			fileNames.push($(this).attr('file-name'));
 			fileLengths.push($(this).attr('file-length'));
 		});
@@ -672,7 +672,7 @@ function pressButton(e) {
 // When a controller axis movement is detected
 function moveAxis(e) {
 	const { axis, axisMovementValue } = e.detail;
-	
+
 	if (axis === 0) {
 		moveXY[0] = axisMovementValue;
 	} else if (axis === 1) {
@@ -681,25 +681,25 @@ function moveAxis(e) {
 		moveYP[0] = axisMovementValue;
 	} else if (axis === 3) {
 		moveYP[2] = axisMovementValue;
-	} 
+	}
 }
 
 // Send the movement values at fixed intervals
 function sendMovementValues() {
-	
+
 	// X or Y motor movement
 	if (moveXY[0] != moveXY[1] || moveXY[2] != moveXY[3]) {
-		
+
 		// X-axis (left/right turning)
 		if (moveXY[0] != moveXY[1]) moveXY[1] = moveXY[0];
 		else moveXY[0] = 0;
-		
+
 		// Y-axis (forward/reverse movement)
 		if (moveXY[2] != moveXY[3]) moveXY[3] = moveXY[2];
 		else moveXY[2] = 0;
-		
+
 		$('#joytext').html('x: ' + Math.round(moveXY[1]*100) + ', y: ' + Math.round(moveXY[3]*-100));
-		
+
 		// Send data to python app, so that it can be passed on
 		$.ajax({
 			url: "/motor",
@@ -714,14 +714,14 @@ function sendMovementValues() {
 				}
 			},
 			error: function(error) {
-				showAlert(1, 'Unknown Error!', 'Could not send movement command.', 0);
+				showAlert(1, 'Error Desconocido!', 'Could not send movement command.', 0);
 			}
 		});
 	} else {
 		moveXY[0] = 0;
 		moveXY[2] = 0;
 	}
-	
+
 	// Yaw Axis (head rotation left/right)
 	if (moveYP[0] != moveYP[1]) {
 		moveYP[1] = moveYP[0];
@@ -732,8 +732,8 @@ function sendMovementValues() {
 		else if (moveHead[0] < 0) moveHead[0] = 0;
 		servoControl(document.getElementById('head-rotation'), 'G', Math.round(moveHead[0]));
 	}
-	
-	
+
+
 	// Pitch Axis (head tilt up/down)
 	if (moveYP[2] != moveYP[3]) {
 		moveYP[3] = moveYP[2];
@@ -763,7 +763,7 @@ function sendMovementValues() {
 		if ((moveArms[0] == -1) && (typeof joypad.buttonEvents.joypad[0].button_6 == 'undefined' || !joypad.buttonEvents.joypad[0].button_6.hold)) moveArms[0] = 0;
 		else if ((moveArms[0] == 1) && (typeof joypad.buttonEvents.joypad[0].button_4 == 'undefined' || !joypad.buttonEvents.joypad[0].button_4.hold)) moveArms[0] = 0;
 	}
-	
+
 	// Right Arm
 	if (moveArms[2] != 0) {
 		moveArms[3] += moveArms[2] * armsMultiplier;
@@ -779,11 +779,11 @@ function sendMovementValues() {
 /*
  * This function is run once when the page is loading
  */
-window.onload = function () { 
+window.onload = function () {
 	var h = window.innerHeight - 100;
 	var cw = $('#limit').width();
 	var pointer = 80;
-	
+
 	if (h > cw) {
 		$('#limit').css({'height':cw+'px'});
 	} else {
@@ -804,7 +804,7 @@ window.onload = function () {
 	var offsets = document.getElementById('limit').getBoundingClientRect();
 	var top = offsets.top;
 	var left = offsets.left;
-	
+
 	jsJoystick = new VirtualJoystick({
 		mouseSupport: true,
 		stationaryBase: true,
@@ -832,12 +832,12 @@ $(window).resize(function () {
 	if (w > 767) cw = ((w / 2) - 30) * 0.8;
 	if (cw > 500) cw = 500;
 	var pointer = 80;
-	
+
 	if (h < cw) {
 		cw = h;
 		pointer = 60;
 	}
-	
+
 	$('#limit').css({'height':cw+'px'});
 	$('#limit').css({'width':cw+'px'});
 	$('#base').css({'width':pointer+'px'});
@@ -852,7 +852,7 @@ $(window).resize(function () {
 	var middleX = w / 2;
 	if (w > 767) middleX += w / 4;
 	var middleY = 40 + 30 + cw / 2;
-	
+
 	jsJoystick.updateDimensions(middleX, middleY, (cw/2), Math.round(cw/2) - pointer/2);
 });
 
@@ -868,7 +868,7 @@ $(document).ready(function () {
 
 	controllerOn();
 	if (joypad.instances[0] != null && joypad.instances[0].connected) updateInfo(joypad.instances[0]);
-	
+
 	// This function runs when a number is inserted into the motor-offset
 	// input box, and ensures the number is valid.
 	$('#motor-offset').bind('keyup input', function(){

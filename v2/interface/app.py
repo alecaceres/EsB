@@ -1,34 +1,26 @@
-#############################################
-# Robot Webinterface - Python Script
-# Simon Bluett, https://wired.chillibasket.com
-# V1.4, 16th February 2020
-#############################################
-
 from flask import Flask, request, session, redirect, url_for, jsonify, render_template
-import queue 		# for serial command queue
-import threading 	# for multiple threads
+import queue
+import threading
 import os
-import pygame		# for sound
-#import serial 		# for Arduino serial access
-#import serial.tools.list_ports
-import subprocess 	# for shell commands
+import pygame
+import serial
+import serial.tools.list_ports
+import subprocess
 
 app = Flask(__name__)
 
 
-##### VARIABLES WHICH YOU CAN MODIFY #####
-loginPassword = "P32020"                                  # Password for web-interface
-arduinoPort = "ARDUINO"                                              # Default port which will be selected
-streamScript = "./mjpg-streamer.sh"                           # Location of script used to start/stop video stream
-soundFolder = "./walle-replica/web_interface/static/sounds/"  # Location of the folder containing all audio files
-app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)      # Secret key used for login session cookies
+#### VARIABLES QUE SE PUEDEN MODIFICAR ###
+loginPassword = "P32020"                                  # Contraseña para la interfaz web
+arduinoPort = "ARDUINO"                                              # Puerto seleccionado por defecto
+streamScript = "./mjpg-streamer.sh"                           # Ubicación del script para comenzar/detener la transmisión
+soundFolder = "./walle-replica/interface/static/sounds/"  # Ubicación de los reportes
+app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)      # Clave secreta usada para las cookies de la sesión
 ##########################################
 
 
-# Start sound mixer
 pygame.mixer.init()
 
-# Set up runtime variables and queues
 exitFlag = 0
 arduinoActive = 0
 streaming = 0
@@ -42,7 +34,7 @@ threads = []
 #############################################
 # Set up the multithreading stuff here
 #############################################
-# The second thread will be used to send data to the Arduino
+# El segundo hilo será usado para enviar datos al microcontrolador
 class arduino (threading.Thread):
 	def __init__(self, threadID, name, q, port):
 		threading.Thread.__init__(self)
@@ -190,8 +182,8 @@ def onoff_streamer():
 # Main Page
 @app.route('/')
 def index():
-	#if session.get('active') != True:
-	#	return redirect(url_for('login'))
+	if session.get('active') != True:
+		return redirect(url_for('login'))
 
 	# Get list of audio files
 	files = []
@@ -221,7 +213,6 @@ def index():
 			# Add the details to the list
 			files.append((audiogroup,audiofiles,audionames,audiotimes))
 
-			'''
 	# Get list of connected USB devices
 	ports = serial.tools.list_ports.comports()
 	usb_ports = [
@@ -234,9 +225,13 @@ def index():
 	for index, item in enumerate(usb_ports):
 		if arduinoPort in item:
 			selectedPort = index
-	'''
 
-	return render_template('index.html',sounds=files, ports = ["COM1", "COM2", "COM3"], portSelect = [], connected = 0)
+	files = [('PdI', 'random path', 'Imágenes tomadas', '2020-09-02 15:12:55'),
+	('Mediciones', 'random path', 'Temperatura', '2020-09-02 17:22:10'),
+	('Mediciones', 'random path', 'Presión', '2020-09-02 16:15:32'),
+	('Rastreo', 'random path', 'Historial de ruta', '2020-09-03 22:45:21')
+	]
+	return render_template('index.html',sounds=files, ports = usb_ports, portSelect = selectedPort, connected = 0)
 
 # Login
 @app.route('/login')
@@ -274,10 +269,10 @@ def motor():
 			queueLock.release()
 			return jsonify({'status': 'OK' })
 		else:
-			return jsonify({'status': 'Error','msg':'Arduino not connected'})
+			return jsonify({'status': 'Error','msg':'Microcontrolador no conectado'})
 	else:
-		print("Error: unable to read POST data from motor command")
-		return jsonify({'status': 'Error','msg':'Unable to read POST data'})
+		print("Error: No se pudo leer los datos del POST from motor command")
+		return jsonify({'status': 'Error','msg':'No se pudo leer los datos del POST'})
 
 # Update Settings
 @app.route('/settings', methods=['POST'])
@@ -296,7 +291,7 @@ def settings():
 				workQueue.put("O" + value)
 				queueLock.release()
 			else:
-				return jsonify({'status': 'Error','msg':'Arduino not connected'})
+				return jsonify({'status': 'Error','msg':'Microcontrolador no conectado'})
 		elif thing == "steerOff":
 			print("Steering Offset:", value)
 			if test_arduino() == 1:
@@ -304,7 +299,7 @@ def settings():
 				workQueue.put("S" + value)
 				queueLock.release()
 			else:
-				return jsonify({'status': 'Error','msg':'Arduino not connected'})
+				return jsonify({'status': 'Error','msg':'Microcontrolador no conectado'})
 		elif thing == "animeMode":
 			print("Animation Mode:", value)
 			if test_arduino() == 1:
@@ -312,7 +307,7 @@ def settings():
 				workQueue.put("M" + value)
 				queueLock.release()
 			else:
-				return jsonify({'status': 'Error','msg':'Arduino not connected'})
+				return jsonify({'status': 'Error','msg':'Microcontrolador no conectado'})
 		elif thing == "soundMode":
 			print("Sound Mode:", value)
 		elif thing == "volume":
@@ -333,11 +328,11 @@ def settings():
 			result = subprocess.call(['sudo','nohup','shutdown','-h','now'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 			return jsonify({'status': 'OK','msg': 'Raspberry Pi is shutting down'})
 		else:
-			return jsonify({'status': 'Error','msg': 'Unable to read POST data'})
+			return jsonify({'status': 'Error','msg': 'No se pudo leer los datos del POST'})
 
 		return jsonify({'status': 'OK' })
 	else:
-		return jsonify({'status': 'Error','msg': 'Unable to read POST data'})
+		return jsonify({'status': 'Error','msg': 'No se pudo leer los datos del POST'})
 
 # Play Audio
 @app.route('/audio', methods=['POST'])
@@ -359,7 +354,7 @@ def audio():
 		#print(elapsed_time)
 		return jsonify({'status': 'OK' })
 	else:
-		return jsonify({'status': 'Error','msg':'Unable to read POST data'})
+		return jsonify({'status': 'Error','msg':'No se pudo leer los datos del POST'})
 
 # Animate
 @app.route('/animate', methods=['POST'])
@@ -377,9 +372,9 @@ def animate():
 			queueLock.release()
 			return jsonify({'status': 'OK' })
 		else:
-			return jsonify({'status': 'Error','msg':'Arduino not connected'})
+			return jsonify({'status': 'Error','msg':'Microcontrolador no conectado'})
 	else:
-		return jsonify({'status': 'Error','msg':'Unable to read POST data'})
+		return jsonify({'status': 'Error','msg':'No se pudo leer los datos del POST'})
 
 # Servo Control
 @app.route('/servoControl', methods=['POST'])
@@ -399,9 +394,9 @@ def servoControl():
 			queueLock.release()
 			return jsonify({'status': 'OK' })
 		else:
-			return jsonify({'status': 'Error','msg':'Arduino not connected'})
+			return jsonify({'status': 'Error','msg':'Microcontrolador no conectado'})
 	else:
-		return jsonify({'status': 'Error','msg':'Unable to read POST data'})
+		return jsonify({'status': 'Error','msg':'No se pudo leer los datos del POST'})
 
 # Arduino Connection
 @app.route('/arduinoConnect', methods=['POST'])
@@ -458,19 +453,19 @@ def arduinoConnect():
 								ser.flushInput()
 							ser.close()
 							onoff_arduino(workQueue, portNum)
-							return jsonify({'status': 'OK','arduino': 'Connected'})
+							return jsonify({'status': 'OK','arduino': 'Conectado'})
 						except:
-							return jsonify({'status': 'Error','msg':'Unable to connect to selected serial port'})
+							return jsonify({'status': 'Error','msg':'No se puede conectar al puerto serial seleccionado'})
 					else:
-						return jsonify({'status': 'Error','msg':'Invalid serial port selected'})
+						return jsonify({'status': 'Error','msg':'Puerto serial seleccionado inválido'})
 				else:
-					return jsonify({'status': 'Error','msg':'Unable to read [port] POST data'})
+					return jsonify({'status': 'Error','msg':'No se puede leer los datos del POST'})
 		else:
-			return jsonify({'status': 'Error','msg':'Unable to read [action] POST data'})
+			return jsonify({'status': 'Error','msg':'No se puede leer los datos del POST'})
 	else:
-		return jsonify({'status': 'Error','msg':'Unable to read [action] POST data'})
+		return jsonify({'status': 'Error','msg':'No se puede leer los datos del POST'})
 
-# Arduino Status (only looks at battery level at the moment)
+# Se verifica el estado de la batería
 @app.route('/arduinoStatus', methods=['POST'])
 def arduinoStatus():
 	if session.get('active') != True:
@@ -483,11 +478,10 @@ def arduinoStatus():
 			if test_arduino():
 				return jsonify({'status': 'OK','battery':batteryLevel})
 			else:
-				return jsonify({'status': 'Error','msg':'Arduino not connected'})
+				return jsonify({'status': 'Error','msg':'Microcontrolador no conectado'})
 
-	return jsonify({'status': 'Error','msg':'Unable to read POST data'})
+	return jsonify({'status': 'Error','msg':'No se pudo leer los datos del POST'})
 
 
 if __name__ == '__main__':
-    #app.run()
     app.run(debug=False, host='0.0.0.0')
