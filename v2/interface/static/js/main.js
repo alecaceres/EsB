@@ -50,7 +50,7 @@ function sendSettings(type, value) {
 
 			// Else if response is all good
 			} else {
-				showAlert(0, 'Success!', 'Settings have been updated.', 1);
+				showAlert(0, 'Exitoso!', 'Las configuraciones han sido actualizadas.', 1);
 
 				// If setting related to the camera stream, show/hide the video stream
 				if(typeof data.streamer !== "undefined"){
@@ -121,7 +121,7 @@ function arduinoConnect(item) {
 						$('#ardu-area').attr('data-original-title','Connected');
 						$('#ardu-area').removeClass('bg-danger');
 						$('#ardu-area').addClass('bg-success');
-						showAlert(0, 'Success!', 'Arduino now connected.', 1);
+						showAlert(0, 'Exitoso!', 'El microcontrolador está conectado.', 1);
 						arduinoTimer = setInterval(checkArduinoStatus, 10000);
 						checkArduinoStatus();
 					} else if(data.arduino == "Disconnected"){
@@ -132,7 +132,7 @@ function arduinoConnect(item) {
 						$('#ardu-area').addClass('bg-danger');
 						$('#ardu-area').removeClass('bg-success');
 						$('#batt-area').addClass('d-none');
-						showAlert(0, 'Success!', 'Arduino now disconnected.', 1);
+						showAlert(0, 'Exitoso!', 'El microcontrolador está desconectado.', 1);
 						clearInterval(arduinoTimer);
 					}
 					return 1;
@@ -167,7 +167,7 @@ function updateSerialList(alertActive) {
 
 			// Else if response is all good
 			} else {
-				if (alertActive) showAlert(0, 'Success!', 'Updated serial port list.', 1);
+				if (alertActive) showAlert(0, 'Exitoso!', 'Lista de puertos seriales actualizada.', 1);
 
 				var portList = data.ports;
 				var listLength = portList.length;
