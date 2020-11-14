@@ -6,6 +6,10 @@ import pygame
 import serial
 import serial.tools.list_ports
 import subprocess
+import plotly.graph_objects as go
+import pandas
+import sys
+import subprocess
 
 app = Flask(__name__)
 
@@ -226,10 +230,10 @@ def index():
 		if arduinoPort in item:
 			selectedPort = index
 
-	files = [('PdI', 'random path', 'Imágenes tomadas', '2020-09-02 15:12:55'),
-	('Mediciones', 'random path', 'Temperatura', '2020-09-02 17:22:10'),
-	('Mediciones', 'random path', 'Presión', '2020-09-02 16:15:32'),
-	('Rastreo', 'random path', 'Historial de ruta', '2020-09-03 22:45:21')
+	files = [('PdI', 'random path', 'Imágenes tomadas', '2020-09-02 15:12:55', '/imgViewer'),
+	('Mediciones', 'random path', 'Temperatura', '2020-09-02 17:22:10', '/plotTemp'),
+	('Mediciones', 'random path', 'Presión', '2020-09-02 16:15:32', 'plotPres'),
+	('Rastreo', 'random path', 'Historial de ruta', '2020-09-03 22:45:21', 'plotMap')
 	]
 	return render_template('index.html',sounds=files, ports = usb_ports, portSelect = selectedPort, connected = 0)
 
@@ -482,6 +486,68 @@ def arduinoStatus():
 
 	return jsonify({'status': 'Error','msg':'No se pudo leer los datos del POST'})
 
+@app.route('/plotTemp')
+def plotTemp():
+    temp = pandas.read_csv('v2/interface/static/data/temperature.csv')
+    time = temp['datetime']
+    temperature = temp['Portland']
+    layout = go.Layout(
+        title="Datos históricos de temperatura",
+        xaxis_title="hora",
+        yaxis_title="temperatura"
+    )
+
+    fig = go.Figure(
+        data=go.Scatter(x=time, y=temperature),
+        layout=layout
+    )
+    fig.show()
+    return redirect(url_for('index'))
+
+@app.route('/plotPres')
+def plotPres():
+    temp = pandas.read_csv('v2/interface/static/data/pressure.csv')
+    time = temp['datetime']
+    temperature = temp['Portland']
+    layout = go.Layout(
+        title="Datos históricos de presión",
+        xaxis_title="hora",
+        yaxis_title="presión"
+    )
+
+    fig = go.Figure(
+        data=go.Scatter(x=time, y=temperature),
+        layout=layout
+    )
+    fig.show()
+    return redirect('/')
+
+@app.route('/plotMap')
+def plotMap():
+    df = pandas.read_csv('v2/interface/static/data/GPS.csv')
+    fig = go.Figure(go.Scattermapbox(
+    mode = "markers+lines",
+    lon = df['longitude'].tolist(),
+    lat = df['latitude'].tolist(),
+    marker = {'size': 10}))
+
+    fig.update_layout(
+        margin ={'l':0,'t':0,'b':0,'r':0},
+        mapbox = {
+            'center': {'lon': -57, 'lat': -25},
+            'style': "stamen-terrain",
+            'zoom': 6})
+
+    fig.show()
+    return redirect('/')
+
+@app.route('/imgViewer')
+def openImage():
+    imageViewerFromCommandLine = {'linux':'xdg-open',
+                                  'win32':'explorer',
+                                  'darwin':'open'}[sys.platform]
+    subprocess.run([imageViewerFromCommandLine, 'v2/interface/static/data/img/'])
+    return redirect('/')
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')

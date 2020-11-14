@@ -246,7 +246,8 @@
 											<a href="#" class="list-group-item list-group-item-action" file-name="1" file-length="8.6" onclick="anime(1,8.6)">Presión 1.01 atm<i class="entry-time">&nbsp; | &nbsp;  2020-09-08 14:27:33</i></a>
 											<a href="#" class="list-group-item list-group-item-action" file-name="2" file-length="18" onclick="anime(2,18)">Ubicación: (-23.2675293,-59.4050525) <i class="entry-time">&nbsp; | &nbsp; 2020-09-08 14:51:01</i></a>
                       <a href="#" class="list-group-item list-group-item-action" file-name="3" file-length="18" onclick="anime(2,18)">Orientación: 21.324° <i class="entry-time">&nbsp; | &nbsp; 2020-09-08 14:51:05</i></a>
-										</div>
+                      <a href="#" class="list-group-item list-group-item-action" file-name="4" file-length="18" onclick="anime(2,18)">Batería: 95% <i class="entry-time">&nbsp; | &nbsp; 2020-09-08 14:51:30</i></a>
+                    </div>
 									</div>
 								</div>
 							</div>
@@ -269,7 +270,7 @@
 											</a>
 											<div id="{{ group.grouper.lower() }}-audio" class="collapse" data-parent="#audio-accordion">
 												{% for item in group.list %}
-													<a href="#" class="list-group-item list-group-item-action" file-name="{{ item[1] }}" file-length="{{ item[3] }}" onclick="playAudio('{{ item[1] }}',{{ item[3] }})">{{ item[2] }} <i class="entry-time">&nbsp; | &nbsp;{{ item[3] }}s</i></a>
+													<a href="{{item[4]}}" class="list-group-item list-group-item-action" file-name="{{ item[1] }}" file-length="{{ item[3] }}" onclick="playAudio('{{ item[1] }}',{{ item[3] }})">{{ item[2] }} <i class="entry-time">&nbsp; | &nbsp;{{ item[3] }}s</i></a>
 												{% endfor %}
 											</div>
 										</div>
