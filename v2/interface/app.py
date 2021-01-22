@@ -14,7 +14,7 @@ app = Flask(__name__)
 loginPassword = "P32020"                                  # Contraseña para la interfaz web
 arduinoPort = "ARDUINO"                                              # Puerto seleccionado por defecto
 streamScript = "./mjpg-streamer.sh"                           # Ubicación del script para comenzar/detener la transmisión
-soundFolder = "./v2/interface/static/sounds/"  # Ubicación de los reportes
+soundFolder = "C:/Users/Gustavo Adorno/EsB/v2/interface/static/sounds"  				# Ubicación de los reportes
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)      # Clave secreta usada para las cookies de la sesión
 ##########################################
 
@@ -231,7 +231,7 @@ def index():
 	('Mediciones', 'random path', 'Presión', '2020-09-02 16:15:32'),
 	('Rastreo', 'random path', 'Historial de ruta', '2020-09-03 22:45:21')
 	]
-	return render_template('index.html',sounds=files, ports = usb_ports, portSelect = selectedPort, connected = 0)
+	return render_template('index.html', sounds=files, ports = usb_ports, portSelect = selectedPort, connected = 0)
 
 # Login
 @app.route('/login')
@@ -484,4 +484,4 @@ def arduinoStatus():
 
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0')
+    app.run(host='127.0.0.1', port=8080, debug=True)
