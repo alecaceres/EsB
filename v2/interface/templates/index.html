@@ -19,6 +19,28 @@
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
 
     <title>Rover - Estación Base</title>
+
+  <!------------------------------------------------------------------------------------------------->
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-linear-gauge.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-table.min.js"></script>
+  <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+  <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+  <style type="text/css">
+
+   html,
+   body,
+   #container {
+     width: 100%;
+     height: 100%;
+     margin: 0;
+     padding: 0;
+   }
+  </style>
+    <!------------------------------------------------------------------------------------------------->
+
 </head>
 <body>
 
@@ -55,7 +77,7 @@
 				<div class="tabbable" id="tabs-937975">
 					<ul class="nav nav-tabs row">
 						<li class="nav-item col col-md-6 no-padding">
-							<a class="nav-link tab-padding d-block d-md-none" href="#tab0" data-toggle="tab"><i class="fa fa-camera"></i><div class="tab-text">Camera</div></a>
+							<a class="nav-link tab-padding" href="#tab0" ><i class="fa fa-camera"></i><div class="tab-text">Camera</div></a>
 						</li>
 						<li class="nav-item col no-padding">
 							<a class="nav-link tab-padding active show" href="#tab1" data-toggle="tab"><i class="fa fa-gamepad"></i><div class="tab-text">Control</div></a>
@@ -79,8 +101,8 @@
 
 						<!-- Camera Stream -->
 						<div class="tab-pane scroll-pane col-sm-12 col-md-6 d-md-block no-padding" id="tab0">
-							<div class="media">
-								<img id="stream" class="stream" src="{{ url_for('static', filename='guideGUI.jpg') }}">
+							<div class="media row align-content-center" style="height:600px">
+								<img id="stream" class="stream" src="{{ url_for('static', filename='Mars_rover_otro.png') }}">
 							</div>
 							<div class="info-elements">
 								<div class="info-area text-white">
@@ -109,6 +131,14 @@
 									<div id="stick" class="stick border border-dark rounded-circle" style="display: none;"></div>
 								</div>
 							</div>
+							<div class="row set-row">
+									<div class="col-xs-12 col-sm-4 set-text">Velocidad máxima de desplazamiento</div>
+									<div class="col-xs-12 col-sm-8">
+										<input id="volume" class="set-slide custom-range" type="range" min="0" max="10" step="1" value="5" onchange="sendSettings('volume',value)"/>
+									</div>
+								</div>
+
+
 						</div>
 
 						<!-- Manual Servo Control -->
@@ -247,10 +277,142 @@
 											<a href="#" class="list-group-item list-group-item-action" file-name="2" file-length="18" onclick="anime(2,18)">Ubicación: (-23.2675293,-59.4050525) <i class="entry-time">&nbsp; | &nbsp; 2020-09-08 14:51:01</i></a>
                       <a href="#" class="list-group-item list-group-item-action" file-name="3" file-length="18" onclick="anime(2,18)">Orientación: 21.324° <i class="entry-time">&nbsp; | &nbsp; 2020-09-08 14:51:05</i></a>
                       <a href="#" class="list-group-item list-group-item-action" file-name="4" file-length="18" onclick="anime(2,18)">Batería: 95% <i class="entry-time">&nbsp; | &nbsp; 2020-09-08 14:51:30</i></a>
-                    </div>
+											<a href="#" class="list-group-item list-group-item-action" file-name="3" file-length="18" onclick="anime(2,18)">Orientación: 21.324° <i class="entry-time">&nbsp; | &nbsp; 2020-09-08 14:51:05</i></a>
+											<a href="#" class="col-xs-12 col-sm-12 list-group-item list-group-item-action" file-name="3" file-length="18" onclick="anime(2,18)">Carga de la bateria: 58% <i class="entry-time">&nbsp; | &nbsp; 2020-09-08 14:51:05</i><div class="col-xs-12 col-sm-12 set-text">
+										<div class="btn-group btn-group-toggle" data-toggle="buttons">
+											<label class="btn btn-warning">
+												<input type="radio" name="options" id="auto-anime" onclick="sendSettings('animeMode',1);servoInputs(0)"> Recargar Bateria
+											</label>
+										</div>
+									</div></a>
+										</div>
 									</div>
 								</div>
 							</div>
+																	<div id="container"></div>
+
+											<script>
+
+
+												var value = 45;
+												anychart.onDocumentReady(function () {
+
+												  // Helper function to create gauge
+												  function createGaugeBase() {
+													// Create gauge
+													var gauge = anychart.gauges.linear();
+													gauge
+													  .layout('horizontal')
+													  .background({ stroke: '10 #545f69', fill: '#ffffff' })
+													  .margin([30, 45, 30, 30])
+													  .padding(0);
+
+													// Set gauge tooltip
+
+
+
+													// Create label to make gauge look like battery
+													var label = gauge.label();
+													label
+													  .text(null)
+													  .position('right-center')
+													  .anchor('right-center')
+													  .width(20)
+													  .height('20%')
+													  .offsetX('20px')
+													  .background({ enabled: true, fill: '#545f69' });
+
+													// Set axis scale
+													var scale = gauge.scale();
+													scale.minimum(0).maximum(100).ticks({ interval: 10 });
+
+													return gauge;
+												  }
+
+												  function batteryBar(value) {
+													// Create gauge
+													var gauge = createGaugeBase();
+													gauge.data([value]);
+
+													// Create bar pointer
+													var batteryEnergy = gauge.bar(0);
+													batteryEnergy
+													  .name('Energy')
+													  .width('90%')
+													  .offset(0)
+													  .fill(function () {
+														if (gauge.data().get(0, 'value') >= 25) return '#545f69';
+														return '#D81F05';
+													  })
+													  .stroke(null)
+													  .zIndex(11);
+													return gauge;
+												  }
+
+												  function batteryLED(value) {
+													// Create gauge
+													var gauge = createGaugeBase();
+													gauge.data([value]);
+
+													// Create LED pointer
+													var batteryEnergy = gauge.led(0);
+
+													batteryEnergy
+													  .size(null)
+													  .name('Energy')
+													  .width(90)
+													  .count(10)
+													  // Set gap
+													  .gap(1)
+													  // Color settings
+													  .dimmer(function () {
+														return '#ffffff';
+													  });
+
+													if (value < 25) {
+													  batteryEnergy.colorScale().colors(['#D81F05', '#D81F05']);
+													} else {
+													  batteryEnergy.colorScale().colors(['#2ECC71', '#2ECC71']);
+													}
+
+													return gauge;
+												  }
+
+												  // Create layout table and set some settings
+												  var layoutTable = anychart.standalones.table();
+												  layoutTable
+													.hAlign('center')
+													.vAlign('middle')
+													.useHtml(true)
+													.fontSize(16)
+													.cellBorder(null);
+
+												  // Put gauges into the layout table
+												  layoutTable.contents([
+													['Medición', null],
+													[
+													  'Nivel de Bateria<br>' +
+													  '<span style="color: #212121; font-size: 12px">Cargado a 58%</span>'
+													],
+													[batteryLED(58), null]
+												  ]);
+
+												  // Set height for first row in layout table
+												  layoutTable.getRow(0).height(40).fontSize(18);
+												  layoutTable.getRow(1).height(50);
+												  layoutTable.getRow(2).height(150);
+
+												  // Merge cells in layout table where needed
+												  layoutTable.getCell(0, 0).colSpan(2);
+												  layoutTable.getCell(1, 0).colSpan(2);
+												  layoutTable.getCell(2, 0).colSpan(2);
+
+
+												  // Set container id and initiate drawing
+												  layoutTable.container('container');
+												  layoutTable.draw();
+												});
+											</script>
 						</div>
 
 						<!-- Sound Selection -->
@@ -295,12 +457,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="row set-row">
-									<div class="col-xs-12 col-sm-4 set-text">Velocidad de desplazamiento</div>
-									<div class="col-xs-12 col-sm-8">
-										<input id="volume" class="set-slide custom-range" type="range" min="0" max="10" step="1" value="5" onchange="sendSettings('volume',value)"/>
-									</div>
-								</div>
+
 								<hr/>
 								<div class="row set-row">
 									<div class="col-xs-12 col-sm-4 set-text">Frecuencia de muestreo del GPS (Hz)</div>
