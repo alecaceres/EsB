@@ -677,6 +677,25 @@ function moveAxis(e) {
 	} 
 }
 
+function sendCommand(command){
+	$.ajax({
+		url: "/command",
+		type: "POST",
+		data: {"code": command},
+		dataType: "json",
+		success: function(data){
+			if(data.status == "Error"){
+				showAlert(1, 'Error!', data.msg, 0);
+			} else {
+				// Do nothing
+			}
+		},
+		error: function(error) {
+			showAlert(1, 'Error desconocido!', 'No se pudo enviar el comando.', 0);
+		}
+	});
+}
+
 // Send the movement values at fixed intervals
 function sendMovementValues() {
 	
