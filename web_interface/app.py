@@ -1,14 +1,3 @@
-#############################################
-# Wall-e Robot Web-interface
-#
-# @file       app.py
-# @brief      Flask web-interface to control Wall-e robot
-# @author     Simon Bluett
-# @website    https://wired.chillibasket.com
-# @copyright  Copyright (C) 2020 - Distributed under MIT license
-# @version    1.4
-# @date       16th February 2020
-#############################################
 
 from flask import Flask, request, session, redirect, url_for, jsonify, render_template
 import queue 		# for serial command queue

@@ -1,10 +1,3 @@
-/* 
- * Robot Webinterface - Main Script
- * Simon B., https://wired.chillibasket.com
- * V1.4, 16th February 2020
- */
-
-
 // Control speed at which gamepad
 // can move the arms and head
 var armsMultiplier = 6;
