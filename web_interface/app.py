@@ -26,7 +26,7 @@ app = Flask(__name__)
 loginPassword = "12345"                                  # Password for web-interface
 arduinoPort = "ARDUINO"                                              # Default port which will be selected
 streamScript = "/home/pi/mjpg-streamer.sh"                           # Location of script used to start/stop video stream
-soundFolder = "D:\FIUNA\Proyecto 4\walle-replica-master\web_interface\static\sounds"  # Location of the folder containing all audio files
+soundFolder = "./web_interface/static/sounds"  # Location of the folder containing all audio files
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)      # Secret key used for login session cookies
 ##########################################
 
@@ -349,6 +349,27 @@ def motor():
 	else:
 		print("Error: unable to read POST data from motor command")
 		return jsonify({'status': 'Error','msg':'Unable to read POST data'})
+
+@app.route('/command', methods=['POST'])
+def command():
+	if session.get('active') != True:
+		return redirect(url_for('login'))
+
+	command =  request.form.get('code')
+
+	if command is not None:
+		print("Comando enviado:", command)
+
+		if test_arduino() == 1:
+			queueLock.acquire()
+			workQueue.put(command)
+			queueLock.release()
+			return jsonify({'status': 'OK' })
+		else:
+			return jsonify({'status': 'Error','msg':'Microcontrolador desconectado'})
+	else:
+		print("Error: No se pudo leer los datos del comando")
+		return jsonify({'status': 'Error','msg':'No se pudo leer los datos del comando'})
 
 
 ##

@@ -305,7 +305,15 @@
 									</div>
 								</div>
 
-
+								<div class="row set-row">
+									<div class="col-xs-12 col-sm-4 set-text">Ingrese comando</div>
+									<div class="col-xs-12 col-sm-8">
+										<input type="text" class="form-control set-num" id="command-input">
+										
+									<button class="btn btn-outline-info" type="button" onclick="sendCommand($('#command-input').val())">Recargar</button>
+									</div>
+								</div>
+								<hr/>
 								<div class="row set-row">
 									<div class="col-xs-12 col-sm-4 set-text">Frecuencia de muestreo del GPS (Hz)</div>
 									<div class="col-xs-12 col-sm-8">
