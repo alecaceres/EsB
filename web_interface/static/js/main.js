@@ -117,6 +117,7 @@ function arduinoConnect(item) {
 						showAlert(0, 'Success!', 'Arduino now connected.', 1);
 						arduinoTimer = setInterval(checkArduinoStatus, 1000);
 						checkArduinoStatus();
+						latlongreset();
 					} else if(data.arduino == "Disconnected"){
 						$('#conn-arduino').html('Reconnect');
 						$('#conn-arduino').addClass('btn-outline-info');
