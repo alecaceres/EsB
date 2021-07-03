@@ -115,7 +115,7 @@ function arduinoConnect(item) {
 						$('#ardu-area').removeClass('bg-danger');
 						$('#ardu-area').addClass('bg-success');
 						showAlert(0, 'Success!', 'Arduino now connected.', 1);
-						arduinoTimer = setInterval(checkArduinoStatus, 10000);
+						arduinoTimer = setInterval(checkArduinoStatus, 1000);
 						checkArduinoStatus();
 					} else if(data.arduino == "Disconnected"){
 						$('#conn-arduino').html('Reconnect');
@@ -141,7 +141,32 @@ function arduinoConnect(item) {
 	}
 }
 
+let map;
 
+function initMap() {
+  const mapOptions = {
+    zoom: 8,
+    center: { lat: -34.397, lng: 150.644 },
+  };
+  map = new google.maps.Map(document.getElementById("map"), mapOptions);
+  const marker = new google.maps.Marker({
+    // The below line is equivalent to writing:
+    // position: new google.maps.LatLng(-34.397, 150.644)
+    position: { lat: -34.397, lng: 150.644 },
+    map: map,
+  });
+  // You can use a LatLng literal in place of a google.maps.LatLng object when
+  // creating the Marker object. Once the Marker object is instantiated, its
+  // position will be available as a google.maps.LatLng object. In this case,
+  // we retrieve the marker's position using the
+  // google.maps.LatLng.getPosition() method.
+  const infowindow = new google.maps.InfoWindow({
+    content: "<p>Marker Location:" + marker.getPosition() + "</p>",
+  });
+  google.maps.event.addListener(marker, "click", () => {
+    infowindow.open(map, marker);
+  });
+}
 /*
  * Update list of serial ports
  */
@@ -928,3 +953,21 @@ $(document).ready(function () {
 	    }
 	});
 });
+
+function latlongreset() {
+	$.ajax({
+		url: "/latlong",
+		type: "POST",
+		data: {"lalo": "LatLong"},
+		dataType: "json",
+		success: function(data){
+			if(data.status != "Error"){
+				var LATITUD_LONGITUD = data.LatLong;
+				$('#LatitudLongitud').html(LATITUD_LONGITUD);
+				return true;
+			} else {
+				showAlert(1, 'Error!', data.msg, 1);
+			}
+		}
+	});
+}

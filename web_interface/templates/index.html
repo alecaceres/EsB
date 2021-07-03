@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
 	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-	
+
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -26,8 +27,10 @@
   <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
   <script src="https://cdn.anychart.com/releases/v8/js/anychart-linear-gauge.min.js"></script>
   <script src="https://cdn.anychart.com/releases/v8/js/anychart-table.min.js"></script>
+	    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
   <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
   <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+
 
 </head>
 <body>
@@ -120,7 +123,8 @@
 								</div>
 							</div>
 						</div>
-						
+
+
 						<!-- Manual Servo Control -->
 						<div class="tab-pane scroll-pane col-sm-12 col-md-6 tabpane-padding" id="tab2">
 							<div class="container-fluid">
@@ -237,6 +241,15 @@
 							</div>
 						</div>
 
+								    <div id="map"></div>
+
+								<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+								<script
+								  src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=&v=weekly"
+								  async
+								></script>
+
+
 						<!-- Animation Selection -->
 						<div class="tab-pane scroll-pane col-sm-12 col-md-6 tabpane-padding" id="tab3">
 							<div class="container-fluid">
@@ -248,13 +261,13 @@
 								<!-- List Group Template -->
 								<div class="list-group" id="anime-accordion">
 									<div class="card">
-										<a href="#all-animations" data-toggle="collapse" class="card-header justify-content-between text-muted">ALL ANIMATIONS 
-											<span class="badge badge-info badge-pill">3</span>
+										<a href="#all-animations" data-toggle="collapse" class="card-header justify-content-between text-muted">TODAS LAS MEDICIONES
+											<span class="badge badge-info badge-pill">4</span>
 										</a>
 										<div class="collapse show" id="all-animations" data-parent="#anime-accordion">
 											<a href="#" class="list-group-item list-group-item-action" file-name="0" file-length="1.4" onclick="anime(0,1.4)">Temperatura: 27.4°C <i class="entry-time">&nbsp; | &nbsp; 2020-09-08 14:15:03</i></a>
 											<a href="#" class="list-group-item list-group-item-action" file-name="1" file-length="8.6" onclick="anime(1,8.6)">Presión 1.01 atm<i class="entry-time">&nbsp; | &nbsp;  2020-09-08 14:27:33</i></a>
-											<a href="#" class="list-group-item list-group-item-action" file-name="2" file-length="18" onclick="anime(2,18)">Ubicación: (-23.2675293,-59.4050525) <i class="entry-time">&nbsp; | &nbsp; 2020-09-08 14:51:01</i></a>
+											<a href="#" class="list-group-item list-group-item-action" file-name="2" file-length="18" onclick="anime(2,18)">Ubicación: <div id="LatitudLongitud" class="badge badge-info badge-pill"></div> &nbsp; | &nbsp; <i class="entry-time"></i></a>
 											<a href="#" class="list-group-item list-group-item-action" file-name="3" file-length="18" onclick="anime(2,18)">Orientación: 21.324° <i class="entry-time">&nbsp; | &nbsp; 2020-09-08 14:51:05</i></a>
 										</div>
 									</div>
