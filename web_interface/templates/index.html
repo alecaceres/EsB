@@ -64,7 +64,7 @@
 				<!-- Tab Buttons -->
 				<div class="tabbable" id="tabs-937975">
 					<ul class="nav nav-tabs row">
-						<li class="nav-item col col-md-6 no-padding">
+						<li class="nav-item col col-md-4 no-padding">
 							<a class="nav-link tab-padding d-block" href="#tab0" data-toggle="tab"><i class="fa fa-camera"></i><div class="tab-text">Cámara</div></a>
 						</li>
 						<li class="nav-item col no-padding">
@@ -82,13 +82,16 @@
 						<li class="nav-item col no-padding">
 							<a id="settings-tab" class="nav-link tab-padding" href="#tab5" data-toggle="tab"><i class="fa fa-tools"></i><div class="tab-text">Config.</div></a>
 						</li>
+						<li class="nav-item col no-padding">
+							<a class="nav-link tab-padding" href="#tab6" data-toggle="tab"><i class="fa fa-eye"></i><div class="tab-text">DdO</div></a>
+						</li>
 					</ul>
 
 					<!-- Tab Content -->
 					<div class="tab-content row">
 						
 						<!-- Camera Stream -->
-						<div class="tab-pane scroll-pane col-sm-12 col-md-6 d-md-block no-padding" id="tab0">
+						<div class="tab-pane scroll-pane col-sm-12 col-md-4 d-md-block no-padding" id="tab0">
 							<div class="media row align-content-center" style="height:550px">
 								<img id="stream" class="stream" src="{{ url_for('static', filename='Mars_rover_otro.png') }}">
 							</div>
@@ -129,10 +132,13 @@
 									<div class="col-xs-12 col-sm-8">
 										<div class="btn-group btn-group-toggle" data-toggle="buttons">
 											<label class="btn btn-warning">
-												<input type="radio" name="options" id="auto-anime" onclick="sendSettings('animeMode',1);servoInputs(0)"> Automatic
+												<input type="radio" name="options" id="auto-anime" onclick="servoInputs(0);checkArduinoStatus('M002')"> Vuelo
+											</label>
+											<label class="btn btn-warning">
+												<input type="radio" name="options" id="auto-anime" onclick="servoInputs(0);checkArduinoStatus('M001')"> Reposo
 											</label>
 											<label class="btn btn-warning active">
-												<input type="radio" name="options" id="manu-anime" checked  onclick="sendSettings('animeMode',0);servoInputs(1)"> Manual
+												<input type="radio" name="options" id="manu-anime" checked  onclick="servoInputs(1);checkArduinoStatus('M003')"> Manual
 											</label>
 										</div>
 									</div>
