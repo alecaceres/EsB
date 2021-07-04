@@ -122,7 +122,7 @@ function arduinoConnect(item) {
 						$('#ardu-area').removeClass('bg-danger');
 						$('#ardu-area').addClass('bg-success');
 						showAlert(0, 'Success!', 'Arduino now connected.', 1);
-						arduinoTimer = setInterval(checkArduinoStatus, 10000);
+						arduinoTimer = setInterval(checkArduinoStatus, 1000);
 						checkArduinoStatus();
 					} else if(data.arduino == "Disconnected"){
 						$('#conn-arduino').html('Reconnect');
@@ -454,52 +454,69 @@ function servoInputs(enabled) {
  * This function checks if the Arduino has sent any messages to the 
  * Raspberry Pi; for example, the current battery level
  */
-function checkArduinoStatus() {
+function checkArduinoStatus(type = "battery") {
+	console.log("Calling checkArduinoStatus. Value: ", type)
 	$.ajax({
 		url: "/arduinoStatus",
 		type: "POST",
-		data: {"type": "battery"},
+		data: {"type": type},
 		dataType: "json",
-		success: function(data){
-			if(data.status != "Error"){
-				var batteryLevel = parseInt(data.battery);
-				if (batteryLevel != -999) {
-					if (batteryLevel < 0) batteryLevel = 0;
-					$('#batt-area').removeClass('d-none');
-					$('#batt-text').html(batteryLevel + '%');
-					if (batteryLevel > 65 && !$('#batt-icon').hasClass('fa-battery-full')) {
-						$('#batt-icon').removeClass('fa-battery-quarter');
-						$('#batt-icon').removeClass('fa-battery-half');
-						$('#batt-icon').addClass('fa-battery-full');
-						$('#batt-area').removeClass('bg-danger');
-						$('#batt-area').removeClass('bg-warning');
-						$('#batt-area').addClass('bg-success');
-					} else if (batteryLevel > 35 && batteryLevel <= 65  && !$('#batt-icon').hasClass('fa-battery-half')) {
-						$('#batt-icon').removeClass('fa-battery-quarter');
-						$('#batt-icon').addClass('fa-battery-half');
-						$('#batt-icon').removeClass('fa-battery-full');
-						$('#batt-area').removeClass('bg-danger');
-						$('#batt-area').addClass('bg-warning');
-						$('#batt-area').removeClass('bg-success');
-					} if (batteryLevel <= 35 && !$('#batt-icon').hasClass('fa-battery-quarter')) {
-						$('#batt-icon').addClass('fa-battery-quarter');
-						$('#batt-icon').removeClass('fa-battery-half');
-						$('#batt-icon').removeClass('fa-battery-full');
-						$('#batt-area').addClass('bg-danger');
-						$('#batt-area').removeClass('bg-warning');
-						$('#batt-area').removeClass('bg-success');
-					}
-				} else {
-					$('#batt-area').addClass('d-none');
-				}
-				return true;
-			} else {
-				showAlert(1, 'Error!', data.msg, 1);
-			}
-		}
+		success: function(data){return successAction(data, type)}
 	});
 }
 
+function successAction(data, type="battery"){
+	console.log("on succesAction", data)
+	switch(type){
+		case "battery":
+			return checkBatteryStatus(data);
+		default:
+			return defaultStatus(data);
+	}
+}
+
+function checkBatteryStatus(data){
+	if(data.status != "Error"){
+		var batteryLevel = parseInt(data.battery);
+		if (batteryLevel != -999) {
+			if (batteryLevel < 0) batteryLevel = 0;
+			$('#batt-area').removeClass('d-none');
+			$('#batt-text').html(batteryLevel + '%');
+			if (batteryLevel > 65 && !$('#batt-icon').hasClass('fa-battery-full')) {
+				$('#batt-icon').removeClass('fa-battery-quarter');
+				$('#batt-icon').removeClass('fa-battery-half');
+				$('#batt-icon').addClass('fa-battery-full');
+				$('#batt-area').removeClass('bg-danger');
+				$('#batt-area').removeClass('bg-warning');
+				$('#batt-area').addClass('bg-success');
+			} else if (batteryLevel > 35 && batteryLevel <= 65  && !$('#batt-icon').hasClass('fa-battery-half')) {
+				$('#batt-icon').removeClass('fa-battery-quarter');
+				$('#batt-icon').addClass('fa-battery-half');
+				$('#batt-icon').removeClass('fa-battery-full');
+				$('#batt-area').removeClass('bg-danger');
+				$('#batt-area').addClass('bg-warning');
+				$('#batt-area').removeClass('bg-success');
+			} if (batteryLevel <= 35 && !$('#batt-icon').hasClass('fa-battery-quarter')) {
+				$('#batt-icon').addClass('fa-battery-quarter');
+				$('#batt-icon').removeClass('fa-battery-half');
+				$('#batt-icon').removeClass('fa-battery-full');
+				$('#batt-area').addClass('bg-danger');
+				$('#batt-area').removeClass('bg-warning');
+				$('#batt-area').removeClass('bg-success');
+			}
+		} else {
+			$('#batt-area').addClass('d-none');
+		}
+		return true;
+	} else {
+		showAlert(1, 'Error!', data.msg, 1);
+	}
+}
+
+function defaultStatus(data){
+	if(data.status != "Error") showAlert(0, 'Éxito!', data.msg, 1)
+	else showAlert(1, 'Error!', data.msg, 1);
+}
 
 /*
  * This function displays an alert message at the bottom of the screen

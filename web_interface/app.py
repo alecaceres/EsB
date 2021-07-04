@@ -603,16 +603,75 @@ def arduinoStatus():
 	if session.get('active') != True:
 		return redirect(url_for('login'))
 		
-	action = request.form.get('type');
-	
+	action = request.form.get('type')
+	error = False
+
 	if action is not None:
 		if action == "battery":
 			if test_arduino():
-				print('battery',batteryLevel)
+				#
+				# print('battery',batteryLevel)
 				return jsonify({'status': 'OK','battery':batteryLevel})
 			else:
 				return jsonify({'status': 'Error','msg':'Microcontrolador desconectado'})
-	
+		print(f'The action type is {action}')
+		if action == "M001":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "M002":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "ELOC":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "ALOC":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "ED01":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "AD01":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "ED02":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "AD02":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "AD03":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "EDD0":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "ADDO":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "EARM":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "AARM":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "ECAB":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "ACAB":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "SPWR":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "DPWR":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "IPWR":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "TPWR":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
 	return jsonify({'status': 'Error','msg':'Unable to read POST data'})
 
 
