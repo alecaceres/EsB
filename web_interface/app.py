@@ -677,7 +677,7 @@ def arduinoStatus():
 def latlong():
 	if session.get('active') != True:
 		return redirect(url_for('login'))
-
+	print('Latitud_Longitud', LatitudLongitud)
 	lalo = request.form.get('lalo');
 
 	if lalo is not None:
