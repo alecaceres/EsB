@@ -1,14 +1,3 @@
-#############################################
-# Wall-e Robot Web-interface
-#
-# @file       app.py
-# @brief      Flask web-interface to control Wall-e robot
-# @author     Simon Bluett
-# @website    https://wired.chillibasket.com
-# @copyright  Copyright (C) 2020 - Distributed under MIT license
-# @version    1.4
-# @date       16th February 2020
-#############################################
 
 from flask import Flask, request, session, redirect, url_for, jsonify, render_template
 import queue 		# for serial command queue
@@ -26,7 +15,7 @@ app = Flask(__name__)
 loginPassword = "12345"                                  # Password for web-interface
 arduinoPort = "ARDUINO"                                              # Default port which will be selected
 streamScript = "/home/pi/mjpg-streamer.sh"                           # Location of script used to start/stop video stream
-soundFolder = "./web_interface/static/sounds"  # Location of the folder containing all audio files
+soundFolder = "./static/sounds"  # Location of the folder containing all audio files
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)      # Secret key used for login session cookies
 ##########################################
 
@@ -43,6 +32,7 @@ batteryLevel = -999
 queueLock = threading.Lock()
 workQueue = queue.Queue()
 threads = []
+LatitudLongitud = '-23.2675293,-59.4050525'
 
 
 #############################################
@@ -138,6 +128,14 @@ def parseArduinoMessage(dataString):
 		dataList = dataString.split('_')
 		if len(dataList) > 1 and dataList[1].isdigit():
 			batteryLevel = dataList[1]
+	if "S002" in dataString:
+		dataList = dataString.split('_')
+		if len(dataList) > 1:
+			LatitudLongitud = dataList[1]
+			print(LatitudLongitud)
+
+
+
 
 
 ##
@@ -674,6 +672,23 @@ def arduinoStatus():
 			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
 	return jsonify({'status': 'Error','msg':'Unable to read POST data'})
 
+
+@app.route('/latlong', methods=['POST'])
+def latlong():
+	if session.get('active') != True:
+		return redirect(url_for('login'))
+
+	lalo = request.form.get('lalo');
+
+	if lalo is not None:
+		if lalo== "LatLong":
+			if test_arduino():
+				print('Latitud_Longitud', LatitudLongitud)
+				return jsonify({'status': 'OK', 'lalo': LatitudLongitud})
+			else:
+				return jsonify({'status': 'Error', 'msg': 'Microcontrolador desconectado'})
+
+	return jsonify({'status': 'Error', 'msg': 'Unable to read POST data'})
 
 ##
 # Program start code, which initialises the web-interface
