@@ -33,8 +33,8 @@ queueLock = threading.Lock()
 workQueue = queue.Queue()
 threads = []
 LatitudLongitud = '-23.2675293,-59.4050525'
-
-
+Aceleracion = '0,0,0'
+Orientacion = '0,0,0'
 #############################################
 # Set up the multithreading stuff here
 #############################################
@@ -123,17 +123,31 @@ def process_data(threadName, q, port):
 def parseArduinoMessage(dataString):
 	global batteryLevel
 	global LatitudLongitud
+	global Aceleracion
+	global Orientacion
 	#print(batteryLevel, " - ", LatitudLongitud)
 	# Battery level message
 	if "Battery" in dataString:
 		dataList = dataString.split('_')
 		if len(dataList) > 1 and dataList[1].isdigit():
 			batteryLevel = dataList[1]
+	if "S001" in dataString:
+		dataList = dataString.split('_')
+		vecAcel = dataList[1].split(',')
+		if len(vecAcel) > 1:
+			Aceleracion = 'X: ' + vecAcel[0] + 'km/h - Y: ' + vecAcel[1] + 'km/h - Z: ' + vecAcel[2] + 'km/h'
+			print(Aceleracion)
 	if "S002" in dataString:
+		dataList = dataString.split('_')
+		vecOrien = dataList[1].split(',')
+		if len(vecOrien) > 1:
+			Orientacion = 'X: ' + vecOrien[0] + '° - Y: ' + vecOrien[1] + '° - Z: ' + vecOrien[2] + '°'
+			print(Orientacion)
+	if "S003" in dataString:
 		dataList = dataString.split('_')
 		if len(dataList) > 1:
 			LatitudLongitud = dataList[1]
-			print(LatitudLongitud)
+			#print(LatitudLongitud)
 
 
 
@@ -614,15 +628,15 @@ def arduinoStatus():
 			else:
 				return jsonify({'status': 'Error','msg':'Microcontrolador desconectado'})
 		print(f'The action type is {action}')
-		print(LatitudLongitud)
-		if action == "S002":
-			'''if test_arduino():
-				return jsonify({'status': 'OK', 'S002':LatitudLongitud})
-			else:
-				return jsonify({'status': 'Error','msg':'Microcontrolador desconectado'})'''
-			print(LatitudLongitud)
+		if action == "S001":
 			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
-			return jsonify({'status': 'OK', 'S002': LatitudLongitud})
+			return jsonify({'status': 'OK', 'S001': Aceleracion, 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "S002":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'S002': Orientacion, 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
+		if action == "S003":
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'S003': LatitudLongitud, 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
 		if action == "M001":
 			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
 			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})

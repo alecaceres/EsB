@@ -117,7 +117,7 @@ function arduinoConnect(item) {
 						showAlert(0, 'Success!', 'Arduino now connected.', 1);
 						arduinoTimer = setInterval(checkArduinoStatus, 1000);
 						checkArduinoStatus();
-						//latlongreset();
+						latlongreset();
 					} else if(data.arduino == "Disconnected"){
 						$('#conn-arduino').html('Reconnect');
 						$('#conn-arduino').addClass('btn-outline-info');
@@ -474,7 +474,7 @@ function servoInputs(enabled) {
  * Raspberry Pi; for example, the current battery level
  */
 function checkArduinoStatus(type = "battery") {
-	console.log("Calling checkArduinoStatus. Value: ", type)
+	//console.log("Calling checkArduinoStatus. Value: ", type)
 	$.ajax({
 		url: "/arduinoStatus",
 		type: "POST",
@@ -489,8 +489,8 @@ function successAction(data, type="battery"){
 	switch(type){
 		case "battery":
 			return checkBatteryStatus(data);
-		case "S002":
-		    return latlongreset(data);
+		//case "S003":
+		//    return latlongreset(data);
 		default:
 			return defaultStatus(data);
 	}
@@ -974,20 +974,67 @@ $(document).ready(function () {
 	});
 });
 
-function latlongreset(data) {
-            //console.log("aqui: ", data.S002);
+function latlongreset(type = "S003") {
+            //console.log("aqui: ", data.S003);
             const fecha = new Date();
             var fechaActual = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
             var hora = fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
             var FechaHora = fechaActual + " " + hora;
-            if(data.status != "Error"){
-                var LATITUD_LONGITUD = data.S002;
+           $.ajax({
+		url: "/arduinoStatus",
+		type: "POST",
+		data: {"type": type},
+		dataType: "json",
+		success: function(data){if(data.status != "Error"){
+               anime(0,0.5);
+               var LATITUD_LONGITUD = data.S003;
                 console.log("aqui: ", LATITUD_LONGITUD);
                 $('#LatitudLongitud').html(LATITUD_LONGITUD);
                 $('#timeUbicacion').html(FechaHora);
-                return true;}
-			//} else {
-			//	showAlert(1, 'Error!', data.msg, 1);
-			//}
+                if(data.status != "Error") showAlert(0, 'Éxito!', data.msg, 1)
+	            else showAlert(1, 'Error!', data.msg, 1);
+                return true;}}});}
+
+function aceleracionreset(type = 'S001'){
+            const fecha = new Date();
+            var fechaActual = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
+            var hora = fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
+            var FechaHora = fechaActual + " " + hora;
+           $.ajax({
+		url: "/arduinoStatus",
+		type: "POST",
+		data: {"type": type},
+		dataType: "json",
+		success: function(data){if(data.status != "Error"){
+               anime(0,0.5);
+               var ACELERACION = data.S001;
+                console.log("aqui: ", ACELERACION);
+                $('#Aceleracion').html(ACELERACION);
+                $('#timeAceleracion').html(FechaHora);
+                if(data.status != "Error") showAlert(0, 'Éxito!', data.msg, 1)
+	            else showAlert(1, 'Error!', data.msg, 1);
+                return true;}}});
+
+}
+
+function orientacionreset(type = 'S002'){
+                const fecha = new Date();
+            var fechaActual = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
+            var hora = fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
+            var FechaHora = fechaActual + " " + hora;
+           $.ajax({
+		url: "/arduinoStatus",
+		type: "POST",
+		data: {"type": type},
+		dataType: "json",
+		success: function(data){if(data.status != "Error"){
+               anime(0,0.5);
+               var ORIENTACION = data.S002;
+                console.log("aqui: ", ORIENTACION);
+                $('#Orientacion').html(ORIENTACION);
+                $('#timeOrientacion').html(FechaHora);
+                if(data.status != "Error") showAlert(0, 'Éxito!', data.msg, 1)
+	            else showAlert(1, 'Error!', data.msg, 1);
+                return true;}}});
 
 }

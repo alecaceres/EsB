@@ -268,13 +268,13 @@
 								<div class="list-group" id="anime-accordion">
 									<div class="card">
 										<a href="#all-animations" data-toggle="collapse" class="card-header justify-content-between text-muted">TODAS LAS MEDICIONES
-											<span class="badge badge-info badge-pill">4</span>
+											<span class="badge badge-info badge-pill">3</span>
 										</a>
 										<div class="collapse show" id="all-animations" data-parent="#anime-accordion">
-											<a href="#" class="list-group-item list-group-item-action" file-name="0" file-length="1.4" onclick="anime(0,1.4)">Temperatura: 27.4°C <i class="entry-time">&nbsp; | &nbsp; 2020-09-08 14:15:03</i></a>
-											<a href="#" class="list-group-item list-group-item-action" file-name="1" file-length="8.6" onclick="anime(1,8.6)">Presión 1.01 atm<i class="entry-time">&nbsp; | &nbsp;  2020-09-08 14:27:33</i></a>
-											<a href="#" class="list-group-item list-group-item-action" file-name="2" file-length="18" onclick="checkArduinoStatus('S002')">Ubicación: <div id="LatitudLongitud" class="badge badge-info badge-pill"></div> &nbsp; | &nbsp; <i id="timeUbicacion" class="entry-time"></i></a>
-											<a href="#" class="list-group-item list-group-item-action" file-name="3" file-length="18" onclick="anime(2,18)">Orientación: 21.324° <i class="entry-time">&nbsp; | &nbsp; 2020-09-08 14:51:05</i></a>
+											<a href="#" class="list-group-item list-group-item-action" file-name="0" file-length="1.4" onclick="aceleracionreset('S001')">Aceleración:&nbsp; <div id="Aceleracion" class="badge badge-info badge-pill"></div> &nbsp; | &nbsp; <i id="timeAceleracion" class="entry-time"></i></a>
+											<!--<a href="#" class="list-group-item list-group-item-action" file-name="1" file-length="8.6" onclick="anime(1,8.6)">Presión 1.01 atm<i class="entry-time">&nbsp; | &nbsp;  2020-09-08 14:27:33</i></a>-->
+											<a href="#" class="list-group-item list-group-item-action" file-name="2" file-length="18" onclick=" latlongreset('S003')">Ubicación:&nbsp; <div id="LatitudLongitud" class="badge badge-info badge-pill"></div> &nbsp; | &nbsp; <i id="timeUbicacion" class="entry-time"></i></a>
+											<a href="#" class="list-group-item list-group-item-action" file-name="3" file-length="18" onclick="orientacionreset('S002')">Orientación: &nbsp; <div id="Orientacion" class="badge badge-info badge-pill"></div> &nbsp; | &nbsp; <i id="timeOrientacion" class="entry-time"></i></a>
 										</div>
 									</div>
 								</div>
