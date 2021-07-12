@@ -122,7 +122,8 @@ def process_data(threadName, q, port):
 #
 def parseArduinoMessage(dataString):
 	global batteryLevel
-	
+	global LatitudLongitud
+	#print(batteryLevel, " - ", LatitudLongitud)
 	# Battery level message
 	if "Battery" in dataString:
 		dataList = dataString.split('_')
@@ -613,6 +614,15 @@ def arduinoStatus():
 			else:
 				return jsonify({'status': 'Error','msg':'Microcontrolador desconectado'})
 		print(f'The action type is {action}')
+		print(LatitudLongitud)
+		if action == "S002":
+			'''if test_arduino():
+				return jsonify({'status': 'OK', 'S002':LatitudLongitud})
+			else:
+				return jsonify({'status': 'Error','msg':'Microcontrolador desconectado'})'''
+			print(LatitudLongitud)
+			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
+			return jsonify({'status': 'OK', 'S002': LatitudLongitud})
 		if action == "M001":
 			if error: return jsonify({'status': 'Error','msg':f'TimeoutError: No se ha recibido respuesta al comando {action}.'})
 			return jsonify({'status': 'OK', 'msg': f'El comando {action} ha sido ejecutado exitosamente.'})
@@ -673,22 +683,6 @@ def arduinoStatus():
 	return jsonify({'status': 'Error','msg':'Unable to read POST data'})
 
 
-@app.route('/latlong', methods=['POST'])
-def latlong():
-	if session.get('active') != True:
-		return redirect(url_for('login'))
-	print('Latitud_Longitud', LatitudLongitud)
-	lalo = request.form.get('lalo');
-
-	if lalo is not None:
-		if lalo== "LatLong":
-			if test_arduino():
-				print('Latitud_Longitud', LatitudLongitud)
-				return jsonify({'status': 'OK', 'lalo': LatitudLongitud})
-			else:
-				return jsonify({'status': 'Error', 'msg': 'Microcontrolador desconectado'})
-
-	return jsonify({'status': 'Error', 'msg': 'Unable to read POST data'})
 
 ##
 # Program start code, which initialises the web-interface
