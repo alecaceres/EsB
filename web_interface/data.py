@@ -7,7 +7,7 @@ try:
     os.mkdir(data_path)
 except OSError as error: 
     print(error)  
-    
+
 def save_data(data):
     '''
     Estructura mínima
@@ -28,11 +28,11 @@ def save_data(data):
     new_data = pd.Series(index = ["command", "timestamp", "type", "response"],
                         data = [command, timestamp, type, response])
     try:
-        df_data = pd.read_csv(f'{data_path}/{command}', index_col=0)
+        df_data = pd.read_csv(f'{data_path}/{command}.csv', index_col=0)
     except FileNotFoundError: 
         df_data = pd.DataFrame([])
     df_data = df_data.append(new_data, ignore_index=True)
-    df_data.to_csv(f'{data_path}/{command}')
+    df_data.to_csv(f'{data_path}/{command}.csv')
 
 def get_file_name(command):
     if command.startswith("A"): return "Attt"
