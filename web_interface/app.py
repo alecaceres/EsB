@@ -7,6 +7,7 @@ import pygame		# for sound
 import serial 		# for Arduino serial access
 import serial.tools.list_ports
 import subprocess 	# for shell commands
+from data import save_data # módulo creado para database handling
 
 app = Flask(__name__)
 
@@ -127,6 +128,10 @@ def parseArduinoMessage(dataString):
 	global Orientacion
 	#print(batteryLevel, " - ", LatitudLongitud)
 	# Battery level message
+	new_data = {"type": "RECEIVE",
+				"response": dataString,
+				"command": dataString[:4]}
+	save_data(new_data)
 	if "Battery" in dataString:
 		dataList = dataString.split('_')
 		if len(dataList) > 1 and dataList[1].isdigit():
