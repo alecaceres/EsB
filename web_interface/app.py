@@ -526,13 +526,17 @@ def servoControl():
 
 	servo = request.form.get('servo');
 	value = request.form.get('value');
+	state = request.form.get('state');
 	if servo is not None and value is not None:
-		print("servo:", servo)
+		print("action:", servo)
 		print("value:", value)
-		
+		print("state:", state)
+		if(len(str(value))<3):
+			value = '0'+ value
 		if test_arduino() == 1:
 			queueLock.acquire()
-			workQueue.put(servo + value)
+			if(state=='TRUE'):
+				workQueue.put(servo + value)
 			queueLock.release()
 			return jsonify({'status': 'OK' })
 		else:

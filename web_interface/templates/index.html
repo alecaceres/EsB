@@ -149,36 +149,46 @@
 								</div>
 								<hr/>
 								<div class="row set-row">
-									<div class="col-xs-12 col-sm-4 set-text">Luminosidad de la linterna</div>
+									<div class="col-xs-12 col-sm-4 set-text">Avanzar</div>
 									<div class="col-xs-12 col-sm-8">
-										<input id="head-rotation" class="set-slide custom-range" type="range" min="0" max="100" step="1" value="50" onfocus="this.oldvalue = this.value;" onchange="servoControl(this,'G',value)"/>
+										<input id="head-rotation" class="set-slide custom-range" type="range" min="0" max="100" step="1" value="0" onfocus="this.oldvalue = this.value;" onchange="servoControl(this,'A',value)"/>
+										<button type="button" id="velocidadAdelante" class="btn btn-primary" onclick="sendVelocidadGiro('A')">O</button>
 									</div>
 								</div>
 								<hr/>
 								<div class="row set-row">
-									<div class="col-xs-12 col-sm-4 set-text">Ancho de la imagen</div>
+									<div class="col-xs-12 col-sm-4 set-text">Retroceder</div>
 									<div class="col-xs-12 col-sm-8">
-										<input id="neck-top" class="set-slide custom-range" type="range" min="0" max="100" step="1" value="50" onfocus="this.oldvalue = this.value;" onchange="servoControl(this,'T',value)"/>
+										<input id="neck-top" class="set-slide custom-range" type="range" min="0" max="100" step="1" value="0" onfocus="this.oldvalue = this.value;" onchange="servoControl(this,'R',value)"/>
+										<button type="button" id="velocidadAtras" class="btn btn-primary" onclick="sendVelocidadGiro('R')">O</button>
 									</div>
 								</div>
 								<div class="row set-row">
-									<div class="col-xs-12 col-sm-4 set-text">Alto de la Imagen</div>
+									<div class="col-xs-12 col-sm-4 set-text">Giro horario</div>
 									<div class="col-xs-12 col-sm-8">
-										<input id="neck-bottom" class="set-slide custom-range" type="range" min="0" max="100" step="1" value="50" onfocus="this.oldvalue = this.value;" onchange="servoControl(this,'B',value)"/>
+										<input id="neck-bottom" class="set-slide custom-range" type="range" min="0" max="100" step="1" value="0" onfocus="this.oldvalue = this.value;" onchange="servoControl(this,'GH',value)"/>
+										<button type="button" id="giroHorario" class="btn btn-primary" onclick="sendVelocidadGiro('GH')">O</button>
+									</div>
+								</div>
+								<div class="row set-row">
+									<div class="col-xs-12 col-sm-4 set-text">Giro antihorario</div>
+									<div class="col-xs-12 col-sm-8">
+										<input id="neck-bottom2" class="set-slide custom-range" type="range" min="0" max="100" step="1" value="0" onfocus="this.oldvalue = this.value;" onchange="servoControl(this,'GA',value)"/>
+										<button type="button" id="giroAntihorario" class="btn btn-primary" onclick="sendVelocidadGiro('GA', 'TRUE')">O</button>
 									</div>
 								</div>
 								<div class="row set-row">
 									<div class="col-xs-12 col-sm-4 set-text">Comandos rápidos</div>
 									<div class="col-xs-12 col-sm-8">
 										<div class="btn-group" role="group">
-											<button type="button" id="head-up" class="btn btn-primary" onclick="servoPresets(this,'head-up','f')">
-												Panorámica
+											<button type="button" id="stop" class="btn btn-primary" onclick="servoPresets(this,'stop','s')">
+												Detenerse
 											</button>
-											<button type="button" id="head-neutral" class="btn btn-primary" onclick="servoPresets(this,'head-neutral','g')">
-												Pan. Baja Calidad
+											<button type="button" id="status" class="btn btn-primary" onclick="servoPresets(this,'status','r')">
+												Probar ruedas
 											</button>
-											<button type="button" id="head-down" class="btn btn-primary" onclick="servoPresets(this,'head-down','h')">
-												Pan. Alta Calidad
+											<button type="button" id="control" class="btn btn-primary" onclick="servoPresets(this,'control','c')">
+												Fallo de ruedas
 											</button>
 										</div>
 									</div>
@@ -273,7 +283,7 @@
 										<div class="collapse show" id="all-animations" data-parent="#anime-accordion">
 											<a href="#" class="list-group-item list-group-item-action" file-name="0" file-length="1.4" onclick="aceleracionreset('S001')">Aceleración:&nbsp; <div id="Aceleracion" class="badge badge-info badge-pill"></div> &nbsp; | &nbsp; <i id="timeAceleracion" class="entry-time"></i></a>
 											<!--<a href="#" class="list-group-item list-group-item-action" file-name="1" file-length="8.6" onclick="anime(1,8.6)">Presión 1.01 atm<i class="entry-time">&nbsp; | &nbsp;  2020-09-08 14:27:33</i></a>-->
-											<a href="#" class="list-group-item list-group-item-action" file-name="2" file-length="18" onclick=" latlongreset('S003')">Ubicación:&nbsp; <div id="LatitudLongitud" class="badge badge-info badge-pill"></div> &nbsp; | &nbsp; <i id="timeUbicacion" class="entry-time"></i></a>
+											<a href="#" class="list-group-item list-group-item-action" file-name="2" file-length="18" onclick="latlongreset('S003')">Ubicación:&nbsp; <div id="LatitudLongitud" class="badge badge-info badge-pill"></div> &nbsp; | &nbsp; <i id="timeUbicacion" class="entry-time"></i></a>
 											<a href="#" class="list-group-item list-group-item-action" file-name="3" file-length="18" onclick="orientacionreset('S002')">Orientación: &nbsp; <div id="Orientacion" class="badge badge-info badge-pill"></div> &nbsp; | &nbsp; <i id="timeOrientacion" class="entry-time"></i></a>
 										</div>
 									</div>

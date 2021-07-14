@@ -144,7 +144,7 @@ function arduinoConnect(item) {
 
 let map;
 
-function initMap() {
+/*function initMap() {
   const mapOptions = {
     zoom: 8,
     center: { lat: -34.397, lng: 150.644 },
@@ -167,7 +167,7 @@ function initMap() {
   google.maps.event.addListener(marker, "click", () => {
     infowindow.open(map, marker);
   });
-}
+}*/
 /*
  * Update list of serial ports
  */
@@ -310,13 +310,14 @@ function playAudio(clip, time) {
 /*
  * Send a manual servo control command
  */
-function servoControl(item, servo, value) {
+function servoControl(item, servo, value, state = 'FALSE') {
 	$.ajax({
 		url: "/servoControl",
 		type: "POST",
-		data: {"servo": servo, "value": value},
+		data: {"servo": servo, "value": value, "state": state},
 		dataType: "json",
 		success: function(data){
+			console.log(servo);
 			// If a response is received from the python backend, but it contains an error
 			if(data.status == "Error"){
 				item.value = item.oldvalue;
@@ -327,6 +328,10 @@ function servoControl(item, servo, value) {
 			} else {
 				item.value = value;
 				item.oldvalue = value;
+				if(servo=="A") {var velocidadF=Math.floor(item.value/100*999); console.log(velocidadF); $('#velocidadAdelante').html(velocidadF + " seg");}
+				if(servo=="R") {var velocidadB=Math.floor(item.value/100*999); console.log(velocidadB); $('#velocidadAtras').html(velocidadB + " seg");}
+				if(servo=="GH") {var giroH=Math.floor(item.value/100*99); console.log(giroH); $('#giroHorario').html(giroH + " °");}
+				if(servo=="GA") {var giroAh=Math.floor(item.value/100*99); console.log(giroAh); $('#giroAntihorario').html(giroAh + " °");}
 				return true;
 			}
 		},
@@ -1038,3 +1043,18 @@ function orientacionreset(type = 'S002'){
                 return true;}}});
 
 }
+
+function sendVelocidadGiro(servo, state) {
+    if(servo=="A") {var value= document.getElementById('head-rotation').value; value = Math.floor(value/100*999);}
+    if(servo=="R") {var value= document.getElementById('neck-top').value; value = Math.floor(value/100*999);}
+    if(servo=="GH") {var value= document.getElementById('neck-bottom').value; value = Math.floor(value/100*99);}
+    if(servo=="GA") {var value= document.getElementById('neck-bottom2').value; value = Math.floor(value/100*99);}
+
+    $.ajax({
+		url: "/servoControl",
+		type: "POST",
+		data: {"servo": servo, "value": value, "state": state},
+		dataType: "json",
+		success: function(data){
+                console.log(value);
+		}})}
