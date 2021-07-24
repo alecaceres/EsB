@@ -74,7 +74,7 @@
 							<a class="nav-link tab-padding active show" href="#tab1" data-toggle="tab"><i class="fa fa-gamepad"></i><div class="tab-text">Control</div></a>
 						</li>
 						<li class="nav-item col no-padding">
-							<a class="nav-link tab-padding" href="#tab2" data-toggle="tab"><i class="fa fa-eye"></i><div class="tab-text">PdI</div></a>
+							<a class="nav-link tab-padding" href="#tab2" data-toggle="tab"><i class="fa fa-eye"></i><div class="tab-text">Exploración</div></a>
 						</li>
 						<li class="nav-item col no-padding">
 							<a class="nav-link tab-padding" href="#tab3" data-toggle="tab"><i class="fa fa-tachometer-alt"></i><div class="tab-text">Mediciones</div></a>
@@ -254,6 +254,24 @@
 										</div>
 									</div>
 								</div>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('ODE1')">Detecta objetos a la derecha del vehículo y emite la señal </button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('OD45')">Detecta objetos a la derecha 45° del vehículo y emite la señal </button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('OENF')">Detecta objetos enfrente del vehículo y emite la señal </button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('OI45')">Detecta objetos a la izquierda 45° del vehículo y emite la señal </button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('OIZQ')">Detecta objetos a la izquierda del vehículo y emite la señal </button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('OATR')">Detecta objetos atrás del vehículo y emite la señal</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('OAB1')">Detecta abismos bajo el vehículo y emite la señal izq</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('OAB2')">Detecta abismos bajo el vehículo y emite la señal der</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('FDER')">Detecta falla del sensor derecho y emite la señal</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('FD45')">Detecta falla del sensor derecho 45° y emite la señal</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('FENF')">Detecta falla del sensor enfrente y emite la señal</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('FI45')">Detecta falla del sensor izquierdo 45° y emite la señal</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('FIZQ')">Detecta falla del sensor izquierdo y emite la señal</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('FATR')">Detecta falla del sensor trasero y emite la señal</button>
+								<br><br>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('DCA1')">Desplegar cámara</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('PCA1')">Plegar cámara</button>
+								
 							</div>
 						</div>
 
@@ -422,14 +440,16 @@
 								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('ED03')">Enciende el driver 03</button>
 								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('AD03')">Apaga el driver 03</button>
 
-								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('ELOC')">Alimentar micro de LOC</button>
-								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('ELOC')">Alimentar micro de LOC</button>
-								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('ELOC')">Alimentar micro de LOC</button>
-								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('ELOC')">Alimentar micro de LOC</button>
-								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('ELOC')">Alimentar micro de LOC</button>
-								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('ELOC')">Alimentar micro de LOC</button>
-								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('ELOC')">Alimentar micro de LOC</button>
-								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('ELOC')">Alimentar micro de LOC</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('EDDO')">Energiza a DdO</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('ADDO')">Apaga el sistema completo</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('EARM')">Enciende la alimentacion del driver PWM para mover el brazo de PdI</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('AARM')">Corta la alimentación del modulo pwm</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('ECAB')">Energiza al sistema</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('ACAB')">Apaga CaB</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('SPWR')">Dormir al subsistema PWR</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('DPWR')">Despertar PWR</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('IPWR')">PWR devuelve todos los parámetros de tensión y corriente.</button>
+								<button id="conn-streamer" type="button" class="btn btn-outline-info" onclick="checkArduinoStatus('TPWR')">PWR devuelve el valor de temperatura de la batería</button>
 
 							</div>
 						</div>
